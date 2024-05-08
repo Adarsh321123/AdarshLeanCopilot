@@ -34,8 +34,7 @@ open SuggestTactics in
 /--
 Generate a list of tactic suggestions.
 -/
-def suggestTactics (targetPrefix : String) : TacticM (Array (String × Float)) := do
-  let state ← getPpTacticState
+def suggestTacticsGivenState (state : String) (targetPrefix : String) : TacticM (Array (String × Float)) := do
   let nm ← getGeneratorName
   let model ← getGenerator nm
   let suggestions ← generate model state targetPrefix
@@ -60,6 +59,12 @@ def suggestTactics (targetPrefix : String) : TacticM (Array (String × Float)) :
       if isAesop then none else some (t, s)
     return filteredSuggestions
 
+/--
+Generate a list of tactic suggestions.
+-/
+def suggestTactics (targetPrefix : String) : TacticM (Array (String × Float)) := do
+  let state ← getPpTacticState
+  suggestTacticsGivenState state targetPrefix
 
 /--
 Information of a premise.
